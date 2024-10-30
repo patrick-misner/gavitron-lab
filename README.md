@@ -109,6 +109,7 @@ I'll also install the whole virtIO suite after windows is updated and turn this 
 ## Setting up Primary Domain Controller
 <details>
 <summary>Steps to create primary domain controller</summary>
+
 ![alt text](images/dc01.png)
 
 ![alt text](images/dc02.png)
