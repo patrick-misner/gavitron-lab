@@ -1,5 +1,9 @@
 # Test Lab Creation
 
+<br>
+<br>
+<br>
+
 ## Create VLAN 9
 
 <details>
@@ -28,10 +32,12 @@ I wanted to pick something unique and not too broad to avoid routing conflict wi
 Since I'm already using VLAN 1 on this router, I'll start the lab using VLAN 9 (10.50.19.0/24) for the Server VLAN. I would normally have a VLAN for vmhost / physical management as well but I'm using this vmhost for other personal projects.
 
 
-<br>
-<br>
-<br>
+
 </details>
+
+<br>
+<br>
+<br>
 
 ## Create DHCP Server for VLAN 9
 
