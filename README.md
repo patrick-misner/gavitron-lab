@@ -164,7 +164,7 @@ Create Forwarders for DNS lookups beyond the domain controller (I am experimenti
 
 ![alt text](images/dhcp06.png)
 
-On the DHCP Server right click IPv4 and choose properties, on the advanced tab there is an option for DNS update credentials, add the service accounts
+On the DHCP Server right click IPv4 and choose properties, on the advanced tab there is an option for DNS update credentials, add the service account.
 
 ![alt text](images/dhcp07.png)
 
