@@ -1,6 +1,10 @@
 # Test Lab Creation
 
 ## Create VLAN 9
+
+<details>
+<summary> Steps for VLAN Creation </summary>
+
 1. 
 ![alt text](images/edgemax1.png)
 
@@ -27,17 +31,26 @@ Since I'm already using VLAN 1 on this router, I'll start the lab using VLAN 9 (
 <br>
 <br>
 <br>
+</details>
 
 ## Create DHCP Server for VLAN 9
+
+<details>
+
+<summary>Steps to create DHCP Server</summary>
 
 ![alt text](images/edgemax3.png)
 
 I will later replace this with Windows DHCP Role.
+</details>
 <br>
 <br>
 <br>
 
 ## Allow VLAN 9 traffic on Unifi Switch to EdgeRouter
+
+<details>
+<summary> Steps to allow VLAN 9 traffic on Unifi Switch </summary>
 
 ![alt text](images/unifi1.png)
 
@@ -50,11 +63,14 @@ I also added vlan 9 tagged traffic to the allow list on the switchport profiel a
 
 ## Upload Microsoft Windows Server 2022 Eval to ProxMox vmhost
 ![alt text](images/vmhost1.png)
+</details>
 <br>
 <br>
 <br>
 
 ## Create the Virtual Machine
+<details>
+<summary> Steps to create virtual machine in proxmox </summary>
 
 ![alt text](images/vmhost2.png)
 ![alt text](images/vmhost3.png)
@@ -78,12 +94,15 @@ https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/v
 I'll also install the whole virtIO suite after windows is updated and turn this into a clone and create full clones for any windows server I need.
 
 ![alt text](images/vmhost10.png)
+
+</details>
 <br>
 <br>
 <br>
 
 ## Setting up Primary Domain Controller
-
+<details>
+<summary>Steps to create primary domain controller</summary>
 ![alt text](images/dc01.png)
 
 ![alt text](images/dc02.png)
@@ -100,217 +119,71 @@ Save that DSRM password somewhere special!
 
 ![alt text](images/dc07.png)
 
-Enable typographer option to see result.
+</details>
 
-(c) (C) (r) (R) (tm) (TM) (p) (P) +-
 
-test.. test... test..... test?..... test!....
+<br>
+<br>
+<br>
 
-!!!!!! ???? ,,  -- ---
+## Setting up DHCP and DNS
+<details>
 
-"Smartypants, double quotes" and 'single quotes'
+<summary>Steps to create set up DHCP and DNS</summary>
+<br>
+Create all the DHCP Scopes, setting router to [scope range].1 and dns to domain controller 10.50.19.10
 
+![alt text](images/dhcp01.png)
 
-## Emphasis
+Disable DHCP server for VLAN 9 on EdgeMax Router
 
-**This is bold text**
+![alt text](images/dhcp02.png)
 
-__This is bold text__
+In order for DHCP to properly dynamically update DNS We need to Authorize the server and configure credentials.
 
-*This is italic text*
+First Authorize
 
-_This is italic text_
+![alt text](images/dhcp03.png)
 
-~~Strikethrough~~
+Create Service Accounts (I can use dhcp2.service for a fail-over server later)
 
+![alt text](images/dhcp04.png)
 
-## Blockquotes
+Create Service Account permissions to DNS Server
 
+![alt text](images/dhcp05.png)
 
-> Blockquotes can also be nested...
->> ...by using additional greater-than signs right next to each other...
-> > > ...or with spaces between arrows.
+Create Forwarders for DNS lookups beyond the domain controller (I am experimenting with malware and content blocking cloudflare dns servers)
 
+![alt text](images/dhcp06.png)
 
-## Lists
+On the DHCP Server right click IPv4 and choose properties, on the advanced tab there is an option for DNS update credentials, add the service accounts
 
-Unordered
+![alt text](images/dhcp07.png)
 
-+ Create a list by starting a line with `+`, `-`, or `*`
-+ Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    * Ac tristique libero volutpat at
-    + Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-+ Very easy!
+![alt text](images/dhcp08.png)
 
-Ordered
+Now when we requset a new IP on the second Windows server, we will see DHCP is working and adding records to DNS Forward and Reverse Zones
 
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
+New IP Acquired
 
+![alt text](images/dhcp09.png)
 
-1. You can use sequential numbers...
-1. ...or keep all the numbers as `1.`
+DHCP server is showing the lease
 
-Start numbering with offset:
+![alt text](images/dhcp10.png)
 
-57. foo
-1. bar
+DNS Server is showing the A Record
 
+![alt text](images/dhcp11.png)
 
-## Code
+DNS Server is showing the PTR record
 
-Inline `code`
+![alt text](images/dhcp12.png)
 
-Indented code
+</details>
 
-    // Some comments
-    line 1 of code
-    line 2 of code
-    line 3 of code
 
-
-Block code "fences"
-
-```
-Sample text here...
-```
-
-Syntax highlighting
-
-``` js
-var foo = function (bar) {
-  return bar++;
-};
-
-console.log(foo(5));
-```
-
-## Tables
-
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
-
-Right aligned columns
-
-| Option | Description |
-| ------:| -----------:|
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
-
-
-## Links
-
-[link text](http://dev.nodeca.com)
-
-[link with title](http://nodeca.github.io/pica/demo/ "title text!")
-
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
-
-
-## Images
-
-![Minion](https://octodex.github.com/images/minion.png)
-![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
-
-Like links, Images also have a footnote style syntax
-
-![Alt text][id]
-
-With a reference later in the document defining the URL location:
-
-[id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
-
-
-## Plugins
-
-The killer feature of `markdown-it` is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
-
-
-### [Emojies](https://github.com/markdown-it/markdown-it-emoji)
-
-> Classic markup: :wink: :cry: :laughing: :yum:
->
-> Shortcuts (emoticons): :-) :-( 8-) ;)
-
-see [how to change output](https://github.com/markdown-it/markdown-it-emoji#change-output) with twemoji.
-
-
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
-
-- 19^th^
-- H~2~O
-
-
-### [\<ins>](https://github.com/markdown-it/markdown-it-ins)
-
-++Inserted text++
-
-
-### [\<mark>](https://github.com/markdown-it/markdown-it-mark)
-
-==Marked text==
-
-
-### [Footnotes](https://github.com/markdown-it/markdown-it-footnote)
-
-Footnote 1 link[^first].
-
-Footnote 2 link[^second].
-
-Inline footnote^[Text of inline footnote] definition.
-
-Duplicated footnote reference[^second].
-
-[^first]: Footnote **can have markup**
-
-    and multiple paragraphs.
-
-[^second]: Footnote text.
-
-
-### [Definition lists](https://github.com/markdown-it/markdown-it-deflist)
-
-Term 1
-
-:   Definition 1
-with lazy continuation.
-
-Term 2 with *inline markup*
-
-:   Definition 2
-
-        { some code, part of Definition 2 }
-
-    Third paragraph of definition 2.
-
-_Compact style:_
-
-Term 1
-  ~ Definition 1
-
-Term 2
-  ~ Definition 2a
-  ~ Definition 2b
-
-
-### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)
-
-This is HTML abbreviation example.
-
-It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
-
-*[HTML]: Hyper Text Markup Language
-
-### [Custom containers](https://github.com/markdown-it/markdown-it-container)
-
-::: warning
-*here be dragons*
-:::
+<br>
+<br>
+<br>
